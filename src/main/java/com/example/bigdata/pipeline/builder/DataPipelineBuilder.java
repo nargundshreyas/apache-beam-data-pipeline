@@ -22,7 +22,7 @@ public class DataPipelineBuilder {
    * @param function the function
    * @return the pipeline
    */
-public static Pipeline build(final String[] args, PipelineFunction function) {
+  public static Pipeline build(final String[] args, PipelineFunction function) {
     log.info("Building data pipeline....");
     final DataPipelineOptions pipelineOptions =
         PipelineOptionsFactory.fromArgs(args).withValidation().as(DataPipelineOptions.class);

@@ -10,7 +10,7 @@ public class DataPipelineApplication {
    *
    * @param args the input arguments
    */
-public static void main(String[] args) {
+  public static void main(String[] args) {
     DataPipelineBuilder.build(args, new AggregateCustomerOrderByPostalCode()).run();
   }
 }

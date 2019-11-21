@@ -12,23 +12,38 @@ public interface DataPipelineOptions extends GcpOptions {
    *
    * @return the window duration
    */
-@Validation.Required
+  @Validation.Required
   @Description("Duration of the window for streaming data")
   long getWindowDuration();
+
+  /**
+   * Gets window interval.
+   *
+   * @return the window interval
+   */
+  @Description("Buffer time interval between sliding windows")
+  long getWindowInterval();
+
+  /**
+   * Sets window interval.
+   *
+   * @param duration the duration
+   */
+  void setWindowInterval(final long duration);
 
   /**
    * Sets window duration.
    *
    * @param duration the duration
    */
-void setWindowDuration(final long duration);
+  void setWindowDuration(final long duration);
 
   /**
    * Gets window type.
    *
    * @return the window type
    */
-@Validation.Required
+  @Validation.Required
   @Description("Type of window to read data from stream.")
   WindowType getWindowType();
 
@@ -37,14 +52,14 @@ void setWindowDuration(final long duration);
    *
    * @param type the type
    */
-void setWindowType(final WindowType type);
+  void setWindowType(final WindowType type);
 
   /**
    * Gets topic.
    *
    * @return the topic
    */
-@Validation.Required
+  @Validation.Required
   @Description("Topic name")
   String getTopic();
 
@@ -53,32 +68,30 @@ void setWindowType(final WindowType type);
    *
    * @param topic the topic
    */
-void setTopic(final String topic);
+  void setTopic(final String topic);
 
   /**
    * Gets subscription.
    *
    * @return the subscription
    */
-@Validation.Required
+  @Validation.Required
   @Description("Subscription name")
   String getSubscription();
-
 
   /**
    * Sets subscription.
    *
    * @param subscription the subscription
    */
-void setSubscription(final String subscription);
-
+  void setSubscription(final String subscription);
 
   /**
    * Gets output directory path.
    *
    * @return the output directory path
    */
-@Validation.Required
+  @Validation.Required
   @Description("Directory path for output files")
   String getOutputDirectoryPath();
 
@@ -87,14 +100,14 @@ void setSubscription(final String subscription);
    *
    * @param outputDirectoryPath the output directory path
    */
-void setOutputDirectoryPath(final String outputDirectoryPath);
+  void setOutputDirectoryPath(final String outputDirectoryPath);
 
   /**
    * Gets dl topic.
    *
    * @return the dl topic
    */
-@Description("DeadLetter PubSub Topic")
+  @Description("DeadLetter PubSub Topic")
   String getDLTopic();
 
   /**
@@ -102,5 +115,5 @@ void setOutputDirectoryPath(final String outputDirectoryPath);
    *
    * @param topic the topic
    */
-void setDLTopic(final String topic);
+  void setDLTopic(final String topic);
 }

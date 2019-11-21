@@ -2,7 +2,6 @@ package com.example.bigdata.pipeline.functions;
 
 import com.example.bigdata.exception.DataPipelineException;
 import com.example.bigdata.pipeline.PipelineFunction;
-import com.example.bigdata.pipeline.builder.DataPipelineBuilder;
 import com.example.bigdata.pipeline.enums.WindowType;
 import com.example.bigdata.pipeline.options.DataPipelineOptions;
 import com.example.bigdata.pipeline.transformation.ParseCustomerOrderDataFn;
@@ -10,7 +9,6 @@ import com.example.bigdata.pipeline.transformation.WriteWindowedFileFn;
 import com.example.bigdata.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.beam.sdk.Pipeline;
-import org.apache.beam.sdk.coders.NullableCoder;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.gcp.pubsub.PubsubIO;
 import org.apache.beam.sdk.options.PipelineOptions;
@@ -50,8 +48,7 @@ public class AggregateCustomerOrderByPostalCode implements PipelineFunction, Ser
                 "ParsePubSubMessageToCustomerOrder",
                 ParDo.of(new ParseCustomerOrderDataFn())
                     .withOutputTags(
-                        Constants.VALID_DATA_TUPLE,
-                        TupleTagList.of(Constants.INVALID_DATA_TUPLE)));
+                        Constants.VALID_DATA_TUPLE, TupleTagList.of(Constants.INVALID_DATA_TUPLE)));
 
     // Extract tuples with success tag for further transformations
     PCollection<KV<String, String>> customerOrderPCollection =
@@ -69,8 +66,8 @@ public class AggregateCustomerOrderByPostalCode implements PipelineFunction, Ser
           customerOrderPCollection.apply(
               "Window",
               Window.into(
-                  SlidingWindows.of(
-                      Duration.standardMinutes(pipelineOptions.getWindowDuration()))));
+                  SlidingWindows.of(Duration.standardMinutes(pipelineOptions.getWindowDuration()))
+                      .every(Duration.standardMinutes(pipelineOptions.getWindowInterval()))));
     }
 
     // Phase 3 : Apply GroupByKey transformation to aggregate CustomerOrder data based on postal
@@ -100,7 +97,8 @@ public class AggregateCustomerOrderByPostalCode implements PipelineFunction, Ser
     // Extract failed message and push failed messages to dead letter topic
 
     customerOrderPCollectionTuple
-        .get(Constants.INVALID_DATA_TUPLE).setCoder(StringUtf8Coder.of())
+        .get(Constants.INVALID_DATA_TUPLE)
+        .setCoder(StringUtf8Coder.of())
         .apply("DeadLetterMessages", PubsubIO.writeStrings().to(pipelineOptions.getDLTopic()));
 
     return pipeline;
@@ -119,11 +117,15 @@ public class AggregateCustomerOrderByPostalCode implements PipelineFunction, Ser
 
     // Validate WindowType before starting pipeline.
     final WindowType windowType = pipelineOptions.getWindowType();
+
     if (WindowType.FIXED != windowType && WindowType.SLIDING != windowType) {
       throw new DataPipelineException(
           String.format(
               "Invalid WindowType %s.Acceptable WindowType is [%s, %s]",
               windowType, WindowType.FIXED.toString(), WindowType.SLIDING.toString()));
+    } else if (WindowType.SLIDING == windowType && pipelineOptions.getWindowInterval() <= 0) {
+      throw new DataPipelineException(
+          "WindowInterval is mandatory and cannot be 0 for WindowType: SLIDING");
     }
   }
 }

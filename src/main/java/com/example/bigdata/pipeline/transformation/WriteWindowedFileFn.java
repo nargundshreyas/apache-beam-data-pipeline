@@ -138,7 +138,7 @@ public String filenamePrefixForWindow(IntervalWindow window) {
     /**
      * First non null t.
      *
-     * @param <T>  the type parameter
+     * @param <T>   the type parameter
      * @param first the first
      * @param second the second
      * @return the t
