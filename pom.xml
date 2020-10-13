@@ -19,7 +19,7 @@
         <commons.lang3.version>3.9</commons.lang3.version>
         <common.io.version>2.6</common.io.version>
         <cloud.pubsub.version>1.86.0</cloud.pubsub.version>
-        <junit.vesion>4.12</junit.vesion>
+        <junit.vesion>4.13.1</junit.vesion>
         <slf4j.version>1.7.25</slf4j.version>
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
         <jacoco.exclusions>**/*Application*.class,**/constants/*,
