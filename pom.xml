@@ -17,7 +17,7 @@
         <postgres.sql.version>42.2.6</postgres.sql.version>
         <lombok.version>1.18.4</lombok.version>
         <commons.lang3.version>3.9</commons.lang3.version>
-        <common.io.version>2.6</common.io.version>
+        <common.io.version>2.7</common.io.version>
         <cloud.pubsub.version>1.86.0</cloud.pubsub.version>
         <junit.vesion>4.12</junit.vesion>
         <slf4j.version>1.7.25</slf4j.version>
